@@ -1,29 +1,42 @@
-import { useEffect, useState } from 'react'
-import './App.css'
-import SearchBar from './components/SearchBar/SearchBar'
+import { useEffect, useState } from 'react';
+import './App.css';
+import SearchBar from './components/SearchBar/SearchBar';
 import { fetchImages } from './api/images.js';
+import ImageGallery from './components/ImageGallery/ImageGallery.jsx';
 
 function App() {
-  const [query, setQuery] = useState([]);
+  const [query, setQuery] = useState('')
+  const [page, setPage] = useState(1)
+  const [images, setImages] = useState([])
+  const [totalResults, setTotalResults] = useState(0)
+  const [error, setError] = useState(null)
+
+
+
 
   useEffect(() => {
     const load = async () => {
 
       try {
-        const resData = await fetchImages(query);
-        console.log(resData)
-        
+        const { results, total } = await fetchImages(query, page);
+        setImages(results)
+        setTotalResults(total)
       } catch (error) {
-        console.log(error)
+        setError(error.message)
       }
     }
 
     load();
-  }, [query])
+  }, [query, page])
+
+  const handleSubmit = (query) => {
+    setQuery(query)
+  }
 
   return (
     <>
-      <SearchBar />
+      <SearchBar onSubmit={handleSubmit} />
+      <ImageGallery images={images} />
     </>
   )
 }

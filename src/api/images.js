@@ -5,7 +5,7 @@ const fetchImages = async (query, pageNumber) => {
   const params = {
     client_id: apiKey,
     query,
-    page: 1,
+    page: pageNumber,
     per_page: 10,
   };
 
