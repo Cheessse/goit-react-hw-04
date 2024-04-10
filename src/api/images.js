@@ -6,7 +6,7 @@ const fetchImages = async (query, pageNumber) => {
     client_id: apiKey,
     query,
     page: pageNumber,
-    per_page: 12,
+    per_page: 15,
   };
 
   const { data } = await axios.get("https://api.unsplash.com/search/photos", {

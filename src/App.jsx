@@ -6,6 +6,7 @@ import { fetchImages } from './api/images.js';
 import ImageGallery from './components/ImageGallery/ImageGallery.jsx';
 import ErrorMessage from './components/ErrorMessage/ErrorMessage.jsx';
 import Loader from './components/Loader/Loader.jsx'
+import LoadMoreBtn from './components/LoadMoreBtn/LoadMoreBtn.jsx'
 
 function App() {
   const [query, setQuery] = useState('')
@@ -21,11 +22,13 @@ function App() {
 
   useEffect(() => {
     const load = async () => {
-
       try {
         setLoading(true)
         const { results, total } = await fetchImages(query, page);
-        setImages(results)
+            if (total === 0) {
+              toast.error("Please enter the correct search value.")
+            }
+        setImages(prev => [...prev, ...results])
         setTotalResults(total)
       } catch (error) {
         setError('Error fetching images. Please try again.')
@@ -38,10 +41,16 @@ function App() {
   }, [query, page])
 
   const handleSubmit = (query) => {
+    setImages([])
+    setTotalResults(0)
+    setError(null)
+    setPage(1)
+    setLoading(false)
     setQuery(query)
-    if (totalResults === 0) {
-      toast.error("Please enter a search query.")
-    }
+  }
+
+  const handleLoadMore = () => {
+    setPage(page+1)
   }
 
   return (
@@ -50,6 +59,7 @@ function App() {
       {isLoading && <Loader />}
       {isError && <ErrorMessage ErrorMessage={isError} />}
       <ImageGallery images={images} />
+      {(totalResults > 0 && images.length < totalResults) && <LoadMoreBtn onClick={handleLoadMore} />}
             <Toaster
             position="top-right"
             reverseOrder={false}

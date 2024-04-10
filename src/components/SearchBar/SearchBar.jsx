@@ -17,7 +17,7 @@ const SearchBar = ({ onSubmit }) => {
 
         onSubmit(query)
 
-        if (query.trim() === 0) {
+        if (query.trim() === '') {
             toast.error("Please enter a search query.")
             return
         }
