@@ -5,6 +5,7 @@ const fetchImages = async (query, pageNumber) => {
   const params = {
     client_id: apiKey,
     query,
+    orientation: "landscape",
     page: pageNumber,
     per_page: 15,
   };
